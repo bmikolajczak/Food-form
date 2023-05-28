@@ -1,7 +1,7 @@
 export type FormInputs = {
   dishName: string;
   prepTime: string;
-  dishType: string;
+  type: string;
   noOfSlices: number;
   diameter: number;
   spiciness: number;

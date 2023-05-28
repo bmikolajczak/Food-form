@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { ChangeEvent, FC, useEffect, useRef } from "react";
 
 import { useForm, useController, SubmitHandler } from "react-hook-form";
 
@@ -13,9 +13,6 @@ const dishesOptions = [
 ];
 
 export const DishesForm: FC = () => {
-  //   const handleTypeChange = (e) => {
-  //     console.log(`Chosen dish`);
-  //   };
   const {
     register,
     handleSubmit,
@@ -25,19 +22,36 @@ export const DishesForm: FC = () => {
     formState: { errors },
   } = useForm<FormInputs & PrepTimeProps>();
 
-  const { field } = useController({ name: "dishType", control });
+  //prep time ref
+  const prepTimeRef = useRef<PrepTimeProps>({ hours: 0, minutes: 0, seconds: 0 });
+  const handleHoursChange = (e: ChangeEvent<HTMLInputElement>) => {
+    prepTimeRef.current.hours = +e.target.value;
+    console.log(prepTimeRef.current.hours);
+  };
+  const handleMinutesChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (+e.target.value > 59) {
+      return;
+    }
+    prepTimeRef.current.minutes = +e.target.value;
+    console.log(prepTimeRef.current.minutes);
+  };
+  const handleSecondsChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (+e.target.value > 59) {
+      return;
+    }
+    prepTimeRef.current.seconds = +e.target.value;
+    console.log(prepTimeRef.current.seconds);
+  };
+  //dish time select
+  const { field } = useController({ name: "type", control });
 
-  const dishType = watch("dishType");
+  const dishType = watch("type");
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
     console.log("submitted data: ", data);
   };
 
   const handleSelectChange = (option) => {
-    // if (dishType === "pizza") {
-    //   console.log("unregistered");
-    //   unregister("spiciness");
-    // }
     field.onChange(option.value);
   };
   useEffect(() => {
@@ -53,6 +67,12 @@ export const DishesForm: FC = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* <label htmlFor="dishName">Dish name</label> */}
       <input {...register("dishName", { required: "Dish name is required" })} />
+      <p>Duration</p>
+      <div>
+        <input type="number" placeholder="HH" onChange={(e) => handleHoursChange(e)} />
+        <input type="number" max={59} maxLength={2} placeholder="MM" onChange={(e) => handleMinutesChange(e)} />
+        <input type="number" max={59} maxLength={2} placeholder="SS" onChange={(e) => handleSecondsChange(e)} />
+      </div>
       <p>{errors.dishName?.message}</p>
       <Select
         value={dishesOptions.find(({ value }) => value === field.value)}
