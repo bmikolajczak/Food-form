@@ -14,7 +14,8 @@ export type PrepTimeProps = {
   seconds: number;
 };
 
-export interface IErrorProps {
-  errorCode: number;
-  errorMsg: string;
+export interface IResponse {
+  fetching: boolean;
+  responseCode: number;
+  responseMsg: string;
 }
