@@ -29,7 +29,7 @@ export const DishesForm: FC = () => {
     console.log("submitted data: ", data, data.spiciness);
   };
 
-  const handleSelectChange = (option: { value: string; label: string }) => {
+  const handleSelectChange = (option) => {
     field.onChange(option.value);
   };
   useEffect(() => {
@@ -44,7 +44,9 @@ export const DishesForm: FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* <label htmlFor="dishName">Dish name</label> */}
+      <p>Dish Name</p>
       <input {...register("dishName", { required: "Dish name is required" })} />
+      <p>{errors.dishName?.message}</p>
       <p>Duration</p>
       <div>
         <input required type="number" placeholder="HH" onChange={(e) => handleHoursChange(e, prepTimeRef)} />
@@ -65,7 +67,6 @@ export const DishesForm: FC = () => {
           onChange={(e) => handleSecondsChange(e, prepTimeRef)}
         />
       </div>
-      <p>{errors.dishName?.message}</p>
       <Select
         required
         value={dishesOptions.find(({ value }) => value === field.value)}
@@ -80,17 +81,28 @@ export const DishesForm: FC = () => {
             type="number"
             {...register("diameter", { required: "Please enter diamater" })}
           />
+          <p>{errors.diameter?.message}</p>
           <input
             placeholder="number of slices"
             type="number"
             {...register("noOfSlices", { required: "Please enter number of slices" })}
           />
+          <p>{errors.noOfSlices?.message}</p>
         </>
       ) : dishType === "soup" ? (
-        <input placeholder="spiciness" max={10} type="number" {...register("spiciness", { required: true })} />
+        <>
+          <input
+            placeholder="spiciness"
+            max={10}
+            type="number"
+            {...register("spiciness", { required: true, min: 1, max: 10 })}
+          />
+          <p>{errors.spiciness?.message}</p>
+        </>
       ) : dishType === "sandwich" ? (
         <input placeholder="slices of bread" type="number" {...register("slicesOfBread", { required: true })} />
       ) : null}
+      <p>{errors.slicesOfBread?.message}</p>
       <input type="submit" />
     </form>
   );
