@@ -8,7 +8,8 @@
 
 - `git clone https://github.com/bmikolajczak/nextjs-fav-quote.git`
 - `yarn install` or `npm install`
-- `yarn dev start` or `npm run dev`
+- For development env: `yarn dev start` or `npm run dev`
+- For build: `yarn dev start` or `npm run dev`
 
 ## Tech stack
 
