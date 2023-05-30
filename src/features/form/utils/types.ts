@@ -1,11 +1,11 @@
 export type FormInputs = {
-  dishName: string;
-  prepTime: string;
+  name: string;
+  preparation_time: string;
   type: string;
-  noOfSlices: number;
+  no_of_slices: number;
   diameter: number;
-  spiciness: number;
-  slicesOfBread: number;
+  spiciness_scale: number;
+  slices_of_bread: number;
 };
 
 export type PrepTimeProps = {
@@ -16,6 +16,5 @@ export type PrepTimeProps = {
 
 export interface IResponse {
   fetching: boolean;
-  responseCode: number;
   responseMsg: string;
 }

@@ -10,7 +10,7 @@ import { Response } from "./response";
 
 export const DishesForm: FC = () => {
   const [busy, setBusy] = useState(false);
-  const [response, setResponse] = useState<IResponse>({ fetching: true, responseCode: 100, responseMsg: "Loading" });
+  const [response, setResponse] = useState<IResponse>({ fetching: true, responseMsg: "Loading" });
 
   const {
     register,
@@ -29,22 +29,36 @@ export const DishesForm: FC = () => {
 
   const dishType = watch("type");
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => {
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    setBusy(true);
+
     const hours = prepTimeRef.current.hours < 10 ? `0${prepTimeRef.current.hours}` : `${prepTimeRef.current.hours}`;
     const minutes =
       prepTimeRef.current.minutes < 10 ? `0${prepTimeRef.current.minutes}` : `${prepTimeRef.current.minutes}`;
     const seconds =
       prepTimeRef.current.seconds < 10 ? `0${prepTimeRef.current.seconds}` : `${prepTimeRef.current.seconds}`;
-    setBusy(true);
+
     const request = {
       ...data,
       preparation_time: `${hours}:${minutes}:${seconds}`,
     };
-    console.log("submitted data: ", request);
 
-    setTimeout(() => {
-      setResponse({ responseCode: 200, responseMsg: "OK", fetching: false });
-    }, 2000);
+    const response = await fetch("https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    });
+    response.json().then(
+      () => {
+        setResponse({ responseMsg: "Request sent successfully", fetching: false });
+      },
+      () => {
+        setResponse({ responseMsg: "Request failed. Try again", fetching: false });
+      }
+    );
   };
 
   const handleSelectChange = (option) => {
@@ -52,11 +66,11 @@ export const DishesForm: FC = () => {
   };
   useEffect(() => {
     if (dishType === "pizza") {
-      unregister(["spiciness", "slicesOfBread"]);
+      unregister(["spiciness_scale", "slices_of_bread"]);
     } else if (dishType === "soup") {
-      unregister(["slicesOfBread", "diameter", "noOfSlices"]);
+      unregister(["slices_of_bread", "diameter", "no_of_slices"]);
     } else if (dishType === "sandwich") {
-      unregister(["spiciness", "diameter", "noOfSlices"]);
+      unregister(["spiciness_scale", "diameter", "no_of_slices"]);
     }
   }, [unregister, dishType]);
   return (
@@ -64,17 +78,17 @@ export const DishesForm: FC = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* <label htmlFor="dishName">Dish name</label> */}
         <h4>Dish Name</h4>
-        <input {...register("dishName", { required: "Dish name is required" })} />
-        <p>{errors.dishName?.message}</p>
-        <h4>Duration</h4>
+        <input {...register("name", { required: "Dish name is required" })} />
+        <p>{errors.name?.message}</p>
+        <h4>Preparation Time</h4>
         <div className="grid">
-          <input required type="number" placeholder="HH" onChange={(e) => handleHoursChange(e, prepTimeRef)} />
+          <input required type="number" placeholder="Hr" onChange={(e) => handleHoursChange(e, prepTimeRef)} />
           <input
             required
             type="number"
             max={59}
             maxLength={2}
-            placeholder="MM"
+            placeholder="Min"
             onChange={(e) => handleMinutesChange(e, prepTimeRef)}
           />
           <input
@@ -82,7 +96,7 @@ export const DishesForm: FC = () => {
             type="number"
             max={59}
             maxLength={2}
-            placeholder="SS"
+            placeholder="Sec"
             onChange={(e) => handleSecondsChange(e, prepTimeRef)}
           />
         </div>
@@ -120,39 +134,41 @@ export const DishesForm: FC = () => {
               placeholder="diamter"
               step={0.1}
               type="number"
-              {...register("diameter", { required: "Please enter diamater" })}
+              {...register("diameter", { required: "Please enter diamater", min: 1 })}
             />
-            <span>{errors.diameter?.message}</span>
+            <p>{errors.diameter?.message}</p>
             <h4>Number of splices</h4>
             <input
               placeholder="number of slices"
               type="number"
-              {...register("noOfSlices", { required: "Please enter number of slices" })}
+              {...register("no_of_slices", { required: "Please enter number of slices", min: 1 })}
             />
-            <span>{errors.noOfSlices?.message}</span>
+            <p>{errors.no_of_slices?.message}</p>
           </>
         ) : dishType === "soup" ? (
           <>
             <h4>Spiciness of the soup (1-10)</h4>
             <input
               placeholder="spiciness"
-              max={10}
               type="number"
-              {...register("spiciness", { required: "Please enter level of spiciness", min: 1, max: 10 })}
+              {...register("spiciness_scale", { required: "Please enter level of spiciness", min: 1, max: 10 })}
             />
-            <span>{errors.spiciness?.message}</span>
+            <p>{errors.spiciness_scale?.message}</p>
           </>
         ) : dishType === "sandwich" ? (
           <>
             <h4>Slices of bread</h4>
-            <input placeholder="slices of bread" type="number" {...register("slicesOfBread", { required: true })} />
-            <span>{errors.slicesOfBread?.message}</span>
+            <input
+              placeholder="slices of bread"
+              type="number"
+              {...register("slices_of_bread", { required: "Please enter the number of slices", min: 1 })}
+            />
           </>
         ) : null}
-        <p>{errors.slicesOfBread?.message}</p>
+        <p>{errors.slices_of_bread?.message}</p>
         <input type="submit" />
       </form>
-      {busy && <Response isLoading={response.fetching} msg={response.responseMsg} code={response.responseCode} />}
+      {busy && <Response isLoading={response.fetching} msg={response.responseMsg} />}
     </div>
   );
 };

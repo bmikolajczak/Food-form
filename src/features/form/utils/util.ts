@@ -10,7 +10,6 @@ export const dishesOptions = [
 export const handleHoursChange = (e: ChangeEvent<HTMLInputElement>, ref: RefObject<PrepTimeProps>) => {
   if (ref.current !== null) {
     ref.current.hours = +e.target.value;
-    console.log(ref.current.hours);
   }
 };
 
@@ -20,7 +19,6 @@ export const handleMinutesChange = (e: ChangeEvent<HTMLInputElement>, ref: RefOb
       return;
     }
     ref.current.minutes = +e.target.value;
-    console.log(ref.current.minutes);
   }
 };
 export const handleSecondsChange = (e: ChangeEvent<HTMLInputElement>, ref: RefObject<PrepTimeProps>) => {
@@ -29,6 +27,5 @@ export const handleSecondsChange = (e: ChangeEvent<HTMLInputElement>, ref: RefOb
       return;
     }
     ref.current.seconds = +e.target.value;
-    console.log(ref.current.seconds);
   }
 };
