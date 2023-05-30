@@ -18,4 +18,5 @@
 - React
 - TypeScript
 - Vite
+- React-hook-form
 - PicoCSS
