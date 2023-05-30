@@ -6,7 +6,7 @@ import Select from "react-select";
 
 import { FormInputs, IResponse, PrepTimeProps } from "./utils/types";
 import { handleHoursChange, handleMinutesChange, handleSecondsChange, dishesOptions } from "./utils/util";
-import { Error } from "./error";
+import { Response } from "./response";
 
 export const DishesForm: FC = () => {
   const [busy, setBusy] = useState(false);
@@ -30,8 +30,18 @@ export const DishesForm: FC = () => {
   const dishType = watch("type");
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
+    const hours = prepTimeRef.current.hours < 10 ? `0${prepTimeRef.current.hours}` : `${prepTimeRef.current.hours}`;
+    const minutes =
+      prepTimeRef.current.minutes < 10 ? `0${prepTimeRef.current.minutes}` : `${prepTimeRef.current.minutes}`;
+    const seconds =
+      prepTimeRef.current.seconds < 10 ? `0${prepTimeRef.current.seconds}` : `${prepTimeRef.current.seconds}`;
     setBusy(true);
-    console.log("submitted data: ", data, data.spiciness);
+    const request = {
+      ...data,
+      preparation_time: `${hours}:${minutes}:${seconds}`,
+    };
+    console.log("submitted data: ", request);
+
     setTimeout(() => {
       setResponse({ responseCode: 200, responseMsg: "OK", fetching: false });
     }, 2000);
@@ -104,7 +114,7 @@ export const DishesForm: FC = () => {
               placeholder="spiciness"
               max={10}
               type="number"
-              {...register("spiciness", { required: true, min: 1, max: 10 })}
+              {...register("spiciness", { required: "Please enter level of spiciness", min: 1, max: 10 })}
             />
             <p>{errors.spiciness?.message}</p>
           </>
@@ -114,7 +124,7 @@ export const DishesForm: FC = () => {
         <p>{errors.slicesOfBread?.message}</p>
         <input type="submit" />
       </form>
-      {busy && <Error isLoading={response.fetching} msg={response.responseMsg} code={response.responseCode} />}
+      {busy && <Response isLoading={response.fetching} msg={response.responseMsg} code={response.responseCode} />}
     </main>
   );
 };
