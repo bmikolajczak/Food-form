@@ -1,25 +1,34 @@
 import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 
 import { DishesForm } from "./features/form";
 
 function App() {
   return (
-    <>
+    <article>
+      <header>
+        <nav>
+          <ul>
+            <li>
+              <h1 className="page-title">Food Form</h1>
+            </li>
+          </ul>
+          <ul>
+            {/* <li>
+              <a href="https://vitejs.dev" target="_blank">
+                <img src={viteLogo} className="logo" alt="Vite logo" />
+              </a>
+            </li> */}
+            <li>
+              <img src={reactLogo} className="logo react" alt="React logo" />
+            </li>
+          </ul>
+        </nav>
+      </header>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
         <DishesForm />
       </div>
-    </>
+    </article>
   );
 }
 

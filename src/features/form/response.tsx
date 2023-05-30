@@ -2,9 +2,9 @@ import { FC } from "react";
 
 export const Response: FC<{ code?: number; msg: string; isLoading: boolean }> = ({ code, msg, isLoading }) => {
   return (
-    <article>
+    <footer>
       <h4 aria-busy={isLoading}>{msg}</h4>
-      <p>Eror code: {code}</p>
-    </article>
+      <i>(Response code: {code})</i>
+    </footer>
   );
 };

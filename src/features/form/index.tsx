@@ -60,14 +60,14 @@ export const DishesForm: FC = () => {
     }
   }, [unregister, dishType]);
   return (
-    <main>
+    <div className="container-fluid">
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* <label htmlFor="dishName">Dish name</label> */}
-        <p>Dish Name</p>
+        <h4>Dish Name</h4>
         <input {...register("dishName", { required: "Dish name is required" })} />
         <p>{errors.dishName?.message}</p>
-        <p>Duration</p>
-        <div>
+        <h4>Duration</h4>
+        <div className="grid">
           <input required type="number" placeholder="HH" onChange={(e) => handleHoursChange(e, prepTimeRef)} />
           <input
             required
@@ -86,45 +86,73 @@ export const DishesForm: FC = () => {
             onChange={(e) => handleSecondsChange(e, prepTimeRef)}
           />
         </div>
+        <h4>Type of Food</h4>
         <Select
           required
           value={dishesOptions.find(({ value }) => value === field.value)}
           onChange={handleSelectChange}
           options={dishesOptions}
+          styles={{
+            placeholder: (baseStyles) => ({
+              ...baseStyles,
+              color: "white",
+            }),
+            singleValue: (baseStyles) => ({
+              ...baseStyles,
+              color: "white",
+            }),
+            control: (baseStyles, state) => ({
+              ...baseStyles,
+              backgroundColor: "#11191f",
+              borderColor: state.isFocused ? "#e9bf83" : "#374956",
+            }),
+            option: (baseStyles) => ({
+              ...baseStyles,
+              backgroundColor: "#374956",
+              color: "white",
+            }),
+          }}
         />
         {dishType === "pizza" ? (
           <>
+            <h4>Diamater fo the pizza</h4>
             <input
               placeholder="diamter"
               step={0.1}
               type="number"
               {...register("diameter", { required: "Please enter diamater" })}
             />
-            <p>{errors.diameter?.message}</p>
+            <span>{errors.diameter?.message}</span>
+            <h4>Number of splices</h4>
             <input
               placeholder="number of slices"
               type="number"
               {...register("noOfSlices", { required: "Please enter number of slices" })}
             />
-            <p>{errors.noOfSlices?.message}</p>
+            <span>{errors.noOfSlices?.message}</span>
           </>
         ) : dishType === "soup" ? (
           <>
+            <h4>Spiciness of the soup (1-10)</h4>
             <input
               placeholder="spiciness"
               max={10}
               type="number"
               {...register("spiciness", { required: "Please enter level of spiciness", min: 1, max: 10 })}
             />
-            <p>{errors.spiciness?.message}</p>
+            <span>{errors.spiciness?.message}</span>
           </>
         ) : dishType === "sandwich" ? (
-          <input placeholder="slices of bread" type="number" {...register("slicesOfBread", { required: true })} />
+          <>
+            <h4>Slices of bread</h4>
+            <input placeholder="slices of bread" type="number" {...register("slicesOfBread", { required: true })} />
+            <span>{errors.slicesOfBread?.message}</span>
+          </>
         ) : null}
         <p>{errors.slicesOfBread?.message}</p>
         <input type="submit" />
       </form>
       {busy && <Response isLoading={response.fetching} msg={response.responseMsg} code={response.responseCode} />}
-    </main>
+    </div>
   );
 };
