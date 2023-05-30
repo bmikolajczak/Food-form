@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, useState } from "react";
 
 import { useForm, useController, SubmitHandler } from "react-hook-form";
 
-import Select from "react-select";
+import Select, { SingleValue } from "react-select";
 
 import { FormInputs, IResponse, PrepTimeProps } from "./utils/types";
 import { handleHoursChange, handleMinutesChange, handleSecondsChange, dishesOptions } from "./utils/util";
@@ -61,8 +61,8 @@ export const DishesForm: FC = () => {
     );
   };
 
-  const handleSelectChange = (option) => {
-    field.onChange(option.value);
+  const handleSelectChange = (option: SingleValue<{ value: string; label: string }>) => {
+    field.onChange(option?.value);
   };
   useEffect(() => {
     if (dishType === "pizza") {
