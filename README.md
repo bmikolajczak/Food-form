@@ -1,5 +1,7 @@
 # Food From in REact with TypeScript
 
+[Preview of the app](https://food-form-hex-ocean.netlify.app/)
+
 - Completed in aroud 12h,
 - yarn: v1.22.5,
 - node: v18.14.0
